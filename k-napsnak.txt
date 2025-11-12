@@ -1,0 +1,80 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+struct Item {
+    int value, weight;
+};
+
+
+bool cmp(Item a, Item b) {
+    double r1 = (double)a.value / a.weight;
+    double r2 = (double)b.value / b.weight;
+    return r1 > r2; 
+}
+
+
+double fractGre(Item arr[], int n, int capacity) {
+    sort(arr, arr + n, cmp);
+    int currWeight = 0;
+    double totalVal = 0.0;
+
+    for (int i = 0; i < n; i++) {
+        if (currWeight + arr[i].weight <= capacity) {
+            currWeight += arr[i].weight;
+            totalVal += arr[i].value;
+        } else {
+            int remain = capacity - currWeight;
+            totalVal += arr[i].value * ((double)remain / arr[i].weight);
+            break;
+        }
+    }
+    return totalVal;
+}
+
+
+int dpknap(Item arr[], int n, int capacity) {
+    int dp[n + 1][capacity + 1];
+
+    for (int i = 0; i <= n; i++) {
+        for (int w = 0; w <= capacity; w++) {
+            if (i == 0 || w == 0)
+                dp[i][w] = 0;
+            else if (arr[i - 1].weight <= w)
+                dp[i][w] = max(arr[i - 1].value + dp[i - 1][w - arr[i - 1].weight],
+                               dp[i - 1][w]);
+            else
+                dp[i][w] = dp[i - 1][w];
+        }
+    }
+
+    return dp[n][capacity];
+}
+
+int main() {
+    int n, capacity;
+    cout << "Enter the number of items: ";
+    cin >> n;
+
+    Item arr[n];
+    cout << "Enter value and weight for each item:\n";
+    for (int i = 0; i < n; i++) {
+        cin >> arr[i].value >> arr[i].weight;
+    }
+
+    cout << "Enter the knapsack capacity: ";
+    cin >> capacity;
+
+    double greedy_res = fractGre(arr, n, capacity);
+    int dp_res = dpknap(arr, n, capacity);
+
+    cout << "\nFractional Knapsack (Greedy) Value: " << greedy_res;
+    cout << "\n0/1 Knapsack (Dynamic Programming) Value: " << dp_res << endl;
+
+    if (greedy_res < dp_res)
+        cout << "\nGreedy approach does NOT yield the optimal solution compared to Dynamic Programming.\n";
+    else
+        cout << "\nBoth approaches yield the same optimal result.\n";
+
+    return 0;
+}
