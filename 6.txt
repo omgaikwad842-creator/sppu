@@ -1,0 +1,23 @@
+import pandas as pd
+from mlxtend.frequent_patterns import apriori, association_rules
+
+# Load dataset (no header)
+data = pd.read_csv("Market_Basket_Optimisation.csv", header=None)
+
+# Convert transactions to list
+transactions = []
+for i in range(len(data)):
+    transactions.append([str(data.values[i, j]) for j in range(20) if str(data.values[i, j]) != 'nan'])
+
+# Create dataframe for one-hot encoding
+from mlxtend.preprocessing import TransactionEncoder
+te = TransactionEncoder()
+te_ary = te.fit(transactions).transform(transactions)
+df = pd.DataFrame(te_ary, columns=te.columns_)
+
+# Apply Apriori algorithm
+frequent_items = apriori(df, min_support=0.01, use_colnames=True)
+
+# Generate association rules
+rules = association_rules(frequent_items, metric="lift", min_threshold=1)
+print(rules.sort_values('lift', ascending=False).head(10))

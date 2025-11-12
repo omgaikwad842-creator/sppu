@@ -1,0 +1,43 @@
+# Import required libraries
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+
+# Load dataset
+df = pd.read_csv("heart.csv")
+
+# a) Shape of data
+print("Shape of data:", df.shape)
+
+# b) Find missing values
+print("Missing values:\n", df.isnull().sum())
+
+# c) Data types of each column
+print("Data types:\n", df.dtypes)
+
+# d) Finding zeros
+print("Zero count:\n", (df == 0).sum())
+
+# e) Mean age of patients
+print("Mean age:", df['Age'].mean())
+
+# f) Extract selected columns
+cols = ['Age', 'Sex', 'ChestPain', 'RestBP', 'Chol']
+df_selected = df[cols]
+
+# Split into training (75%) and testing (25%)
+train, test = train_test_split(df_selected, test_size=0.25, random_state=42)
+print("Train shape:", train.shape)
+print("Test shape:", test.shape)
+
+TP, FP, FN, TN = 45, 55, 5, 395
+
+accuracy = (TP + TN) / (TP + TN + FP + FN)
+precision = TP / (TP + FP)
+recall = TP / (TP + FN)
+f1 = 2 * (precision * recall) / (precision + recall)
+
+print(f"Accuracy: {accuracy:.2f}")
+print(f"Precision: {precision:.2f}")
+print(f"Recall: {recall:.2f}")
+print(f"F1 Score: {f1:.2f}")
