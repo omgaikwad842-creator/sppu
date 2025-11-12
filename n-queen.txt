@@ -1,0 +1,93 @@
+#include <iostream>
+
+using namespace std;
+
+#define size 10
+
+int board[size][size];
+
+void printBoard(int n)
+{
+    for(int i=0;i<n;i++)
+    {
+        for(int j=0;j<n;j++)
+        {
+            cout << board[i][j] << " ";
+        }
+           cout << endl;
+    }
+    cout << endl;
+}
+
+bool isSafe(int row,int col,int n)
+{
+    for(int i=0;i<row;i++)
+    {
+        if(board[i][col]==1)
+        {
+            return false;
+        }
+    }
+    
+    for(int i=row,j=col;i>=0 && j>=0;i--,j--)
+    {
+        if(board[i][j]==1)
+        {
+            return false;
+        }
+    }
+    
+   for(int i=row,j=col;i>=0 && j<0;i--,j++)
+    {
+        if(board[i][j]==1)
+        {
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+void solveQueen(int row,int n)
+{
+    if(row==n)
+    {
+        printBoard(n);
+        return;
+    }
+    
+    for(int col=0;col<n;col++)
+    {
+        if(isSafe(row,col,n))
+        {
+            board[row][col]=1;
+            solveQueen(row+1,n);
+            board[row][col]=0;
+        }
+    }
+}
+
+
+
+
+
+int main()
+{
+    int n;
+    cout<<"Enter the number of queen :";
+    cin >>n;
+    
+    for(int i=0;i<n;i++)
+    {
+        for(int j=0;j<n;j++)
+        {
+            board[i][j]=0;
+        }
+    }
+    
+    solveQueen(0,n);
+    
+    
+    return 0;
+}
+

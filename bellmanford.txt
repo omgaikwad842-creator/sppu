@@ -1,0 +1,84 @@
+#include <iostream>
+#include <climits>
+#include <vector>
+
+using namespace std;
+
+struct Edge{
+  int src,dest,weight;  
+};
+
+void bellmanFord(int v,int e,vector<Edge> &edges,int source)
+{
+    vector<int> dest(v,INT_MAX);
+    dest[source]=0;
+    
+    for(int i=0;i<v-1;i++)
+    {
+        for(int j=0;j<e;j++)
+        {
+            int u=edges[j].src;
+            int vt=edges[j].dest;
+            int w=edges[j].weight;
+            
+            if(dest[u]!=INT_MAX && dest[u]+w < dest[vt])
+            {
+                dest[vt]=dest[u]+w;
+            }
+        }
+    }
+    
+            for(int j=0;j<e;j++)
+        {
+            int u=edges[j].src;
+            int vt=edges[j].dest;
+            int w=edges[j].weight;
+            
+            if(dest[u]!=INT_MAX && dest[u]+w < dest[vt])
+            {
+                dest[vt]=dest[u]+w;
+            }
+        }
+        
+        cout<<"distace from strating veertex :" << endl;
+        
+        for(int i=0;i<v;i++)
+        {
+            cout<< "Vertex" << i << "->";
+            if(dest[i]==INT_MAX)
+            {
+                cout << i << "INF" << endl;
+            }
+            else
+            {
+                cout<< dest[i] << endl;
+            }
+        }
+    
+}
+
+int main()
+{
+    int v,e;
+    
+    cout<<"Enter vertex:";
+    cin >> v;
+    
+    cout<<"Enter edge:";
+    cin >> e;
+    
+    vector<Edge> edges(e);
+    cout<<"Enter src|dest|weight:";
+    for(int i=0;i<e;i++)
+    {
+        cin >> edges[i].src >> edges[i].dest >> edges[i].weight;
+    }
+    
+    int source;
+    cout<<"Enter the number stratring point :" ;
+    cin>>source;
+    
+    bellmanFord(v,e,edges,source);
+    
+    return 0;
+}
